@@ -70,7 +70,7 @@
     <title>Task Keeper</title>
   </head>
   <body>
-    {% if hide_side_bar == False %} {# new sidebar #}
+  {% if hide_side_bar == False %} {# new sidebar #}
 
     <style>
       /*!
@@ -219,6 +219,7 @@
               data-target="#{{category.category_name}}"
             >
               <span>{{category.category_name}} [{{category.todo_count}}]</span>
+          {% endfor %}
               {% comment %}
               <span class="category_name">{{category.category_name}}</span>
               <span class="todo_count">{{category.todo_count}}</span> {%
@@ -278,13 +279,6 @@
       <!-- /#page-content-wrapper -->
     </div>
     <!-- /#wrapper -->
-
-    <script>
-      $("#menu-toggle").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-      });
-    </script>
     {% comment %}
     <div class="sidebar">
       <a class="active" href="#home">
@@ -324,9 +318,19 @@
         </a>
       </div>
     </div>
-    {% endcomment %} {% endif %}
+    {% endcomment %} 
+    
+    {% endif %}
 
     <script>
+      // for sidebar menu
+      $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+      });
+
+      // end: for sidebar menu
+
       var active_timer;
       function timer_interval(todo_id, due_date) {
         active_timer = setInterval(function () {
