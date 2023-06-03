@@ -13,7 +13,8 @@ py manage.py runserver
 - [x] revert to original base
 - [x] disable email features
 - [x] skip path 'todos/'
-- [ ] freeze requirements.txt
+- [x] freeze requirements.txt
+- [ ] 
 
 
 ----
