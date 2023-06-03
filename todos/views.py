@@ -106,13 +106,13 @@ def sendEmail(request, receiver_email, notification_time):
     You can edit and delete the todo_item anytime.
     Your item will expire in """ + str(notification_time) + "!"
 
-    send_mail(
-        'Todo_Notification',
-        email_body,
-        'noreply@todo_application.ca',
-        [receiver_email],
-        fail_silently=True,
-    )
+    # send_mail(
+    #     'Todo_Notification',
+    #     email_body,
+    #     'noreply@todo_application.ca',
+    #     [receiver_email],
+    #     fail_silently=True,
+    # )
     return HttpResponse('Mail successfully sent')
 
 
@@ -155,13 +155,13 @@ def is_expired():
         if time_remaining <= todo_notify_time:
             todo_item_expire = "Your todo_item name - " + str(row[1]) +  " will expire in " + str(row[6]) + "! "
 
-            send_mail(
-                'Todo_Notification',
-                todo_item_expire,
-                'noreply@todo_application.ca',
-                [receiver_email],
-                fail_silently=False,
-            )
+            # send_mail(
+            #     'Todo_Notification',
+            #     todo_item_expire,
+            #     'noreply@todo_application.ca',
+            #     [receiver_email],
+            #     fail_silently=False,
+            # )
 
             selected_todo_item = get_object_or_404(Todo, pk=int(todo_item_id))
             selected_todo_item.sent_reminder = "True"
