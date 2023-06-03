@@ -37,7 +37,7 @@ def addTodo(request):
     if request.POST['todo_notification_time']:
         notification_time = request.POST['todo_notification_time']
 
-    sendEmail(request, receiver_email, notification_time)
+    # sendEmail(request, receiver_email, notification_time)
 
     new_item = Todo(todo_text = request.POST['todo_text'],
                     date_created = (parser.parse(request.POST['date_created'])).isoformat(),
