@@ -1,6 +1,6 @@
 # Task Keeper
 
-## How to Run
+### How to Run
 
 ```
 \venv\Scripts\activate
@@ -8,12 +8,15 @@ py manage.py runserver
 
 ```
 
-## Tasks
+### Tasks
 
 - [x] revert to original base
 - [x] disable email features
 - [x] skip path 'todos/'
 - [ ] freeze requirements.txt
+
+
+----
 
 ### Blog post : 
 Check out the detailed description [here](https://medium.com/@saima.s.chaity/build-a-todo-application-using-python-and-django-458d5ca7ffef)
