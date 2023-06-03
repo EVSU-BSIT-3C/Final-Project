@@ -1,0 +1,54 @@
+.sidebar {
+  margin: 0;
+  padding: 100px;
+  width: 250px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  top: 0;
+}
+
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 1.3em;
+  font-weight: 600;
+  margin-bottom: 0.2em;
+}
+
+.sidebar .active{
+  background: #007bff;
+}
+
+.sidebar a:hover, .addTaskButton .btn:hover{
+  background: #004896;
+}
+
+.sidebar .fa {
+  margin-right: 1em;
+}
+
+.todo_count{
+  float: right;
+  background: grey;
+  border: 2px solid gray;
+  width: 15%;
+  border-radius: 50%;
+  padding-left: .4em;
+
+}
+
+@media screen and (max-width: 900px) {
+  .sidebar {
+    width: 60px;
+  }
+  .sidebar .category_name, .todo_count, .home, .addTask, .addCategory{
+    display: none;
+  }
+}
+
+
+

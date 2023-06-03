@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Bootstrap 4 -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+
+    <!-- Tempus Dominus Bootstrap 4 -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'todos/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'todos/edit_dialog.css' %}">
+    <link rel="stylesheet" href="{% static 'todos/style.css' %}">
+
+   <!-- <link rel="stylesheet" href="../../static/todos/sidebar.css">
+   <link rel="stylesheet" href="../../static/todos/edit_dialog.css"> -->
+    <!-- <link rel="stylesheet" href="https://todo-app-python-django.scm.azurewebsites.net/wwwroot/todos/static/todos/sidebar.css">
+    <link rel="stylesheet" href="https://todo-app-python-django.scm.azurewebsites.net/wwwroot/todos/static/todos/edit_dialog.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+
+
+    <title>Task Keeper</title>
+  </head>
+  <body>
+
+  {% if hide_side_bar == False %}
+    <div class="sidebar">
+      <a class="active" href="#home">
+        <i class="fa fa-user"></i>
+        <span class="home">Home</span>
+      </a>
+      {% for category in category_items %}
+        <a href="#category" class="category_list" data-toggle="modal" data-target=#{{category.category_name}}>
+          {% if category.category_name == "Personal" %}
+            <i class="fa fa-home"></i>
+          {% elif category.category_name == "Office" %}
+            <i class="fa fa-laptop"></i>
+          {% elif category.category_name == "Travel" %}
+            <i class="fa fa-plane"></i>
+          {% else %}
+            <i class="fa fa-list-ul"></i>
+          {% endif %}
+          <span class="category_name">{{category.category_name}}</span>
+          <span class="todo_count">{{category.todo_count}}</span>
+        </a>
+      {% endfor %}
+      <div class="addTaskButton">
+        <a href="#" data-toggle="modal" data-target="#myModal">
+          <i class="fa fa-plus"></i>
+          <span class="addTask">Add Task</span>
+        </a>
+      </div>
+      <div class="addTaskButton">
+        <a href="#" data-toggle="modal" data-target="#category_Modal">
+          <i class="fa fa-plus"></i>
+          <span class="addCategory">Add Category</span>
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
+  <script>
+    var active_timer;
+    function timer_interval(todo_id, due_date) {
+      active_timer = setInterval(function() {
+        timer(todo_id, due_date);
+      }, 1000);
+    }
+
+    function timer(todo_id, due_date){
+
+      var countDownDate = new Date(due_date).getTime();
+      var now = new Date().getTime();
+      var distance = countDownDate - now;
+
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      $(".todo_item" + todo_id).html("Time Remaining : " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ");
+      $(".todo_item" + todo_id).css("color", "green");
+
+      if (distance < 0) {
+        clearInterval(active_timer);
+        $(".todo_item" + todo_id).html("");
+      }
+    }
+
+  </script>
+
+  {% block content %}
+  {% endblock %}
+
+  <script>
+    $(function () {
+      $("#dateCreated").datetimepicker();
+      $("#dueDate").datetimepicker();
+    });
+  </script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+{% extends 'todos/base.html' %}
+{% load static %}
+
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="{% static 'todos/edit_dialog.css' %}">
+  <div class="dialog_container">
+    <!-- The Modal -->
+    <div class="dialog" id="edit_todo_dialog">
+      <!-- Modal Header -->
+      <div class="dialog_header">
+        <h4 class="dialog_title">Edit Todo_Item</h4>
+      </div>
+
+      <!-- Modal body -->
+      <div class="dialog-body">
+        <div class="todo_edit_form">
+          <form action="{% url 'todos:update' todo_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="text" class="form-control" name="todo_text" value="{{todo_text}}">
+              <div class="input-group date" id="dateCreated" data-target-input="nearest" style="top: 1em;">
+                <input type="text" class="form-control datetimepicker-input"  name ="due_date" value="{{due_date}}" data-target="#dateCreated"/>
+                <div class="input-group-append" data-target="#dateCreated" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="dialog_footer">
+              <button type="submit" class="btn btn-primary">Save & Close</button>
+              <button type="submit" class="btn btn-danger"><a href="/todos">Close</a></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,6 @@
+*.* linguist-language=Python
+
+# Environments
+.venv
+venv/
+venv.bak/

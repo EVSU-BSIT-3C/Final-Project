@@ -1,0 +1,100 @@
+.applicationHeader{
+  color: green;
+  text-align:center;
+  margin-top: 3em;
+  margin-bottom: 1em
+}
+
+.todoItems{
+  width: 56%;
+  margin: 1em auto;
+}
+
+.todoItems li{
+  margin-top: 1em;
+}
+
+.todoList{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: #e9f2f7;
+  border: 2px solid #e9f2f7;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.editAndDeleteButton a{
+  color:white;
+}
+
+.fa-trash, .fa-edit{
+  font-size:1.5em;
+  color:white;
+}
+
+.fa-calendar{
+  margin-right: 1em;
+}
+
+hr{
+  width: 50%;
+}
+
+.modal-dialog{
+  max-width: 55%;
+}
+
+.modal-header .modal-title{
+  color: green;
+}
+
+.todoForm{
+  width:90%;
+  margin:auto;
+}
+
+.dateField{
+  display: flex;
+  flex-direction: row;
+}
+
+#dateCreated{
+  width:50%;
+  margin: 0 2em 0 0;
+}
+
+#dueDate{
+  width:50%;
+}
+
+.modal-footer{
+  margin-top: 3em;
+}
+
+.modal-footer .btn{
+  width:30%;
+  margin: 1em auto
+}
+
+@media screen and (max-width: 900px) {
+  .addTaskButton{
+    width: 100%;
+  }
+
+  .addTaskButton .btn{
+    height: 56px;
+  }
+
+  hr{
+    width: 90%;
+  }
+
+  .todoItems{
+    width: 90%;
+  }
+
+  .modal-dialog{
+    max-width: 95%;
+  }
+}
