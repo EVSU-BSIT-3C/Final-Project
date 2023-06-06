@@ -1,12 +1,19 @@
-# Task Keeper
+# To-Do List
+
+----
+
+    Eastern Visayas State University
+    BSIT 3C
+    IT 383A Systems Integration and Architecture 2
+
+----
 
 ### How to Run
 
-```
-\venv\Scripts\activate
-py manage.py runserver
-
-```
+1. Create virtual environment: `venv venv`
+2. Install dependencies from requirements: `pip install -r requirements.txt`
+3. Activate virtual environment: `\venv\Scripts\activate`
+4. Run project: ` manage.py runserver`
 
 ### Tasks
 
@@ -18,12 +25,12 @@ py manage.py runserver
 
 
 ----
-
+<!--
 ### Blog post : 
 Check out the detailed description [here](https://medium.com/@saima.s.chaity/build-a-todo-application-using-python-and-django-458d5ca7ffef)
 
 [GitHub Repository](https://github.com/Saima-Chaity/ToDo_Application/)
-
+-->
 ### Features :
 
 - Add todo item in specific category
