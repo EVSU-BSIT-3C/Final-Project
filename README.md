@@ -2,13 +2,10 @@
 
 ### How to Run
 
-```
-Create virtual environment: venv venv
-Install dependencies from reuquirements: pip install -r requirements.txt
-Activate virtual environment: \venv\Scripts\activate
-Run project: py manage.py runserver
-
-```
+1. Create virtual environment: `venv venv`
+2. Install dependencies from requirements: `pip install -r requirements.txt`
+3. Activate virtual environment: `\venv\Scripts\activate`
+4. Run project: ` manage.py runserver`
 
 ### Tasks
 
