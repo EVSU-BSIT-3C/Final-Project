@@ -3,8 +3,10 @@
 ### How to Run
 
 ```
-\venv\Scripts\activate
-py manage.py runserver
+Create virtual environment: venv venv
+Install dependencies from reuquirements: pip install -r requirements.txt
+Activate virtual environment: \venv\Scripts\activate
+Run project: py manage.py runserver
 
 ```
 
