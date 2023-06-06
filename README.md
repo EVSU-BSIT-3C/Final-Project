@@ -13,7 +13,8 @@
 1. Create virtual environment: `venv venv`
 2. Install dependencies from requirements: `pip install -r requirements.txt`
 3. Activate virtual environment: `\venv\Scripts\activate`
-4. Run project: ` manage.py runserver`
+4. Migrate database: `manage.py migrate`
+5. Run project: ` manage.py runserver`
 
 ### Tasks
 
