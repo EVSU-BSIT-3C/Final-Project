@@ -21,16 +21,21 @@ def get_common_data():
     dt_string = current_date_time.strftime("%m/%d/%Y %I:%M %p")
     splited_dt_string = dt_string.split(" ")
 
+    # check if category exists
+    show_add_task = Category.objects.count() > 0;
+
     return {
         'todo_items': todo_items,
         'category_items': category_items,
         'notification_time' : notification_time,
         'hide_side_bar' : False,
-        'current_date': splited_dt_string[0] + str().join(" ") + splited_dt_string[1] + str().join(" ") + splited_dt_string[2]
+        'current_date': splited_dt_string[0] + str().join(" ") + splited_dt_string[1] + str().join(" ") + splited_dt_string[2],
+        'show_add_task': show_add_task,
     }
 
 def index(request):
     context = get_common_data()
+    # check if a category exists
     return render(request, 'todos/index.html', context)
 
 def search(request):

@@ -15,7 +15,7 @@
 }
 
 .blinking {
-  animation: blink 1s infinite;
+  /* animation: blink 1s infinite; */
 }
 
 </style>
@@ -83,7 +83,8 @@
                       todoElement.textContent = remainingTime;
 
                       // Check if the remaining time is within the last 5 minutes (300 seconds)
-                      if (time.total <= 300) {
+                      // changed from 300s to 30s
+                      if (time.total <= 30) {
                           toggleBlinkingHeader(true); // Enable blinking
                       } else {
                           toggleBlinkingHeader(false); // Disable blinking
@@ -158,7 +159,7 @@
               <br>
               <div class="form-group">
                 <label>Select a category:</label>
-                <select style="width: 30%;" name="todo_category">
+                <select style="width: 30%;" name="todo_category" required>
                   {% for category in category_items %}
                   <option value="{{category.id}}">{{category.category_name}}</option>
                   {% endfor %}
