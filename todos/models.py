@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 import datetime
 
 
@@ -26,5 +27,7 @@ class Todo(models.Model):
     notification_time = models.CharField(max_length=400, null=True)
     sent_reminder = models.CharField(max_length=10, default="False")
 
-    def __str__(self):
-        return self.todo_text
+    def clean(self):
+        if self.due_date is not None and self.date_created is not None:
+            if self.due_date < self.date_created:
+                raise ValidationError("Due date cannot be before the date created.")

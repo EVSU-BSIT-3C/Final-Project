@@ -1,0 +1,252 @@
+{% extends 'todos/base.html' %}
+
+{% block body %}
+<center>
+  <br>
+    <h2 style="display: inline;" class="applicationHeader" style="text-align: center;margin-top: 20px;">Task Keeper: Personal Tasks Management System</h2>
+
+</center>
+<hr>
+
+   
+
+    {% if searched %}
+     
+            {% if not Todos %}
+              <center>
+                <div class="alert alert-dismissible alert-light">
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  <strong>Heads up!</strong>The task name<a href="#" class="alert-link">  "{{searched}}"  </a>is not listed yet ! please click the link so we can redirect you to the homepage <a href="{% url 'todos:index' %}" style="color:blue"> "Task page" </a>
+                </div>
+              </center>
+            {% else %}
+            
+        
+                <div class="d-flex flex-column min-vh-100">
+                    <div class="container">
+                        <div class="row justify-content-centerx"> 
+                            {% for Todo in Todos%}
+                            <div class="col-md-4" > 
+                                <div class="card text-white bg-secondary mb-3" >
+                                    <div class="card mb-3">
+                                    <div class="card-header">TASKS RECORDED</div>
+                                    <div class="card-body">
+                                    <div class="todoText">
+                                        <p style="display: inline;">Task Required: </p>
+                                        <p style="display: inline-block;">{{Todo.todo_text}}</p>
+                                        <p><i class="fa fa-calendar"></i>{{Todo.due_date}}</p>
+                                    </div>
+                                    <div class="editAndDeleteButton">
+                                        <button class="btn btn-primary"><a href="{% url 'todos:edit' Todo.id %}"><i class="fa fa-edit"></i></a></button>
+                                        <button class="btn btn-primary"><a href="{% url 'todos:delete' Todo.id %}"><i class="fa fa-trash"></i></a></button>
+                                    </div>
+                                    <br>
+                                    <div class="card-footer text-muted">
+                                        <script>
+                                        // Function to calculate the time remaining
+                                        function getTimeRemaining(endTime) {
+                                            const total = Date.parse(endTime) - Date.parse(new Date());
+                                            const seconds = Math.floor((total / 1000) % 60);
+                                            const minutes = Math.floor((total / 1000 / 60) % 60);
+                                            const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+                                            const days = Math.floor(total / (1000 * 60 * 60 * 24));
+                                    
+                                            return {
+                                            total,
+                                            days,
+                                            hours,
+                                            minutes,
+                                            seconds,
+                                            };
+                                        }
+                                    
+                                        // Function to update the timer display
+                                        function updateTimer(id, endTime) {
+                                            const todoElement = document.querySelector(`.todo_item${id}`);
+                                    
+                                            const time = getTimeRemaining(endTime);
+                                    
+                                            // Check if due date has passed
+                                            if (time.total <= 0) {
+                                            todoElement.style.color = "red";
+                                            todoElement.textContent = "Due date has already passed";
+                                            return;
+                                            }
+                                    
+                                            // Format the remaining time as a string
+                                            const remainingTime = `${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s`;
+                                    
+                                            todoElement.textContent = remainingTime;
+                                        }
+                                    
+                                        // Function to set the interval and update the timer
+                                        function timerInterval(id, endTime) {
+                                            const interval = setInterval(() => {
+                                            updateTimer(id, endTime);
+                                    
+                                            // Check if the due date has passed and clear the interval
+                                            const time = getTimeRemaining(endTime);
+                                            if (time.total <= 0) {
+                                                clearInterval(interval);
+                                            }
+                                            }, 1000); // Update the timer every second
+                                        }
+                                    
+                                        // Call the timerInterval function with the provided values
+                                        timerInterval("{{Todo.id}}", "{{ Todo.due_date|date:"M, d, Y H:i:s" }}");
+                                        </script>
+                                        <p style="text-align: center" class="todo_item{{Todo.id}}"></p>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="container">
+                <!-- The Modal -->
+                <div class="modal" id="myModal">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">Add New Task</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                        <div class="todoForm">
+                          <form action="{% url 'todos:addTodo' %}" method="post" id="addTodoForm">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="addTodo">What do you want to add?</label>
+                              <input type="text" class="form-control" id="addTodo" name="todo_text" placeholder="Description" required>
+                            </div>
+                            <div class="form-group" style="margin-top: 1em;">
+                              <label for="email_notification">Would you like to get email notification? (Optional)</label>
+                              <input type="email" class="form-control" id="email_notification" name="email_notification" placeholder="example@example.com">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                              <label>Select a category:</label>
+                              <select style="width: 30%;" name="todo_category">
+                                {% for category in category_items %}
+                                <option value="{{category.id}}">{{category.category_name}}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                            <br>
+                            <div class="dateField">
+                              <div class="input-group date" id="dateCreated" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" name="date_created" value="{{current_date}}" placeholder="Date created" data-target="#dateCreated" required>
+                                <div class="input-group-append" data-target="#dateCreated" data-toggle="datetimepicker">
+                                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                              </div>
+                              
+                              <div class="input-group date" id="dueDate" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" name="due_date" placeholder="Due date" data-target="#dueDate" required>
+                                <div class="input-group-append" data-target="#dueDate" data-toggle="datetimepicker">
+                                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                <div class="invalid-feedback">Please enter a due date.</div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="container">
+                <!-- The Modal -->
+                {% for category in category_items %}
+                <div class="modal" id="{{ category.category_name }}">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">Items In {{ category.category_name }} Category</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                        {% for todo in todo_items %}
+                          {% if todo.category_id == category.id %}
+                            <p>{{ todo.todo_text }}</p>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+              
+              <div class="container">
+                <!-- The Modal -->
+                <div class="modal" id="category_Modal">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+              
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">Create Category</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+              
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                        <div class="categoryForm">
+                          <form action="{% url 'todos:addCategory' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="addTodo">Which category do you want to add?</label>
+                              <input type="text" class="form-control" id="addCategory" name="category_name" placeholder="Description">
+                            </div>
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <script>
+                // Client-side form validation
+                (function() {
+                  'use strict';
+                  // Fetch the addTodoForm element
+                  var addTodoForm = document.getElementById('addTodoForm');
+                  // Add a submit event listener to the form
+                  addTodoForm.addEventListener('submit', function(event) {
+                    // Retrieve the due date input element
+                    var dueDateInput = document.getElementById('dueDate');
+                    // Check if the due date is empty
+                    if (dueDateInput.value === '') {
+                      // Prevent the form from submitting
+                      event.preventDefault();
+                      // Add the 'is-invalid' class to the input element
+                      dueDateInput.classList.add('is-invalid');
+                    }
+                  });
+                })();
+              </script>
+            
+        
+    {% else %}
+    <div class="alert alert-dismissible alert-light">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong><h5 style="text-align: center;"> Hey! you forgot to type anything in the search bar...</h5></a>
+      </div>
+    {% endif %}
+   
+{% endblock %}

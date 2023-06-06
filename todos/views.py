@@ -7,9 +7,12 @@ from datetime import datetime, time
 import sqlite3
 import time, traceback
 import threading
+from django.core.exceptions import ValidationError
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
 
-
-def index(request):
+def get_common_data():
     todo_items = Todo.objects.order_by('-due_date')[:10]
     category_items = Category.objects.all()
     notification_time = NotificationTime.objects.all()
@@ -18,40 +21,70 @@ def index(request):
     dt_string = current_date_time.strftime("%m/%d/%Y %I:%M %p")
     splited_dt_string = dt_string.split(" ")
 
-    context = {
+    return {
         'todo_items': todo_items,
         'category_items': category_items,
         'notification_time' : notification_time,
         'hide_side_bar' : False,
         'current_date': splited_dt_string[0] + str().join(" ") + splited_dt_string[1] + str().join(" ") + splited_dt_string[2]
     }
+
+def index(request):
+    context = get_common_data()
     return render(request, 'todos/index.html', context)
 
+def search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        Todos = Todo.objects.filter(todo_text__iexact=searched)
+        context = get_common_data()
+        context.update({
+            'searched': searched,
+            'Todos': Todos,
+        })
+        return render(request, 'todos/search.html', context)
+    else:
+        return render(request, 'todos/search.html', {})
+
+    
 
 def addTodo(request):
     receiver_email = ""
     notification_time = "not available"
-    if request.POST['email_notification']:
+
+    if 'email_notification' in request.POST:
         receiver_email = request.POST['email_notification']
 
-    if request.POST['todo_notification_time']:
+    if 'todo_notification_time' in request.POST:
         notification_time = request.POST['todo_notification_time']
 
-    # sendEmail(request, receiver_email, notification_time)
+    sendEmail(request, receiver_email, notification_time)
 
-    new_item = Todo(todo_text = request.POST['todo_text'],
-                    date_created = (parser.parse(request.POST['date_created'])).isoformat(),
-                    due_date = (parser.parse(request.POST['due_date'])).isoformat(),
-                    category_id = request.POST['todo_category'],
-                    email_notification = request.POST['email_notification'],
-                    notification_time = notification_time)
+    new_item = Todo(
+        todo_text=request.POST['todo_text'],
+        date_created=parser.parse(request.POST['date_created']).isoformat(),
+        due_date=parser.parse(request.POST['due_date']).isoformat(),
+        category_id=request.POST['todo_category'],
+        email_notification=receiver_email,
+        notification_time=notification_time
+    )
 
-    new_item.save()
+    try:
+        new_item.full_clean()  # Trigger validation
+    except ValidationError as e:
+        # Handle validation errors
+        error_message = str(e)  # Get the error message
+        # You can redirect to a specific page or render a response with the error message
+
+    new_item.save()  # Save the instance if validation succeeds
+
     category_id = request.POST['todo_category']
     category = get_object_or_404(Category, pk=category_id)
     category.todo_count += 1
     category.save()
+
     return redirect("/todos")
+
 
 
 def addCategory(request):
@@ -106,13 +139,13 @@ def sendEmail(request, receiver_email, notification_time):
     You can edit and delete the todo_item anytime.
     Your item will expire in """ + str(notification_time) + "!"
 
-    # send_mail(
-    #     'Todo_Notification',
-    #     email_body,
-    #     'noreply@todo_application.ca',
-    #     [receiver_email],
-    #     fail_silently=True,
-    # )
+    send_mail(
+        'Todo_Notification',
+        email_body,
+        'noreply@todo_application.ca',
+        [receiver_email],
+        fail_silently=True,
+    )
     return HttpResponse('Mail successfully sent')
 
 
@@ -130,9 +163,8 @@ def check_time(delay, task):
 def is_expired():
     connection = sqlite3.connect('db.sqlite3')
     cursor = connection.cursor()
-    cursor.execute(" SELECT * FROM todos_todo where email_notification != '' AND notification_time != 'None' AND sent_reminder == 'False' ")
+    cursor.execute("SELECT * FROM todos_todo WHERE email_notification != '' AND notification_time != 'None' AND sent_reminder == 'False'")
     rows = cursor.fetchall()
-    todo_notify_time = 0
 
     for row in rows:
         todo_item_id = row[0]
@@ -144,24 +176,27 @@ def is_expired():
         date_in_pst = due_date_in_ms - (7 * 60 * 60 * 1000)
         time_remaining = date_in_pst - current_date
 
-        if splited_notification_time[0] != "None":
+        if len(splited_notification_time) == 2:
             if splited_notification_time[1] == "minutes":
-                todo_notify_time = int((splited_notification_time[0])) * 60 * 1000
+                todo_notify_time = int(splited_notification_time[0]) * 60 * 1000
             elif splited_notification_time[1] == "hours":
-                todo_notify_time = int((splited_notification_time[0])) * 60 * 60 * 1000
+                todo_notify_time = int(splited_notification_time[0]) * 60 * 60 * 1000
             elif splited_notification_time[1] == "day":
-                todo_notify_time = int((splited_notification_time[0])) * 60 * 60 * 24 * 1000
+                todo_notify_time = int(splited_notification_time[0]) * 60 * 60 * 24 * 1000
+            else:
+                continue
+        else:
+            continue
 
         if time_remaining <= todo_notify_time:
-            todo_item_expire = "Your todo_item name - " + str(row[1]) +  " will expire in " + str(row[6]) + "! "
-
-            # send_mail(
-            #     'Todo_Notification',
-            #     todo_item_expire,
-            #     'noreply@todo_application.ca',
-            #     [receiver_email],
-            #     fail_silently=False,
-            # )
+            todo_item_expire = f"Your todo_item name - {row[1]} will expire in {row[6]}!"
+            send_mail(
+                'Todo_Notification',
+                todo_item_expire,
+                'noreply@todo_application.ca',
+                [receiver_email],
+                fail_silently=False,
+            )
 
             selected_todo_item = get_object_or_404(Todo, pk=int(todo_item_id))
             selected_todo_item.sent_reminder = "True"
