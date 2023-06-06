@@ -1,5 +1,13 @@
 # To-Do List
 
+----
+
+    Eastern Visayas State University
+    BSIT 3C
+    IT 383A Systems Integration and Architecture 2
+
+----
+
 ### How to Run
 
 1. Create virtual environment: `venv venv`
