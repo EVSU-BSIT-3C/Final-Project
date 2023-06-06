@@ -158,7 +158,7 @@
               <br>
               <div class="form-group">
                 <label>Select a category:</label>
-                <select style="width: 30%;" name="todo_category">
+                <select style="width: 30%;" name="todo_category" required>
                   {% for category in category_items %}
                   <option value="{{category.id}}">{{category.category_name}}</option>
                   {% endfor %}
