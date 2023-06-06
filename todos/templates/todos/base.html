@@ -71,12 +71,14 @@
               </div>
             </li>
             {% endif %}
+            {% if show_add_task %}
             <li class="nav-item">
               <a href="#" data-toggle="modal" data-target="#myModal" class="nav-link active">
                 <i class="fa fa-plus"></i>
                 <span class="addTask">Add Task</span>
               </a>
             </li>
+            {% endif %}
             <li class="nav-item">
               <a href="#" data-toggle="modal" data-target="#category_Modal" class="nav-link active">
                 <i class="fa fa-plus"></i>
