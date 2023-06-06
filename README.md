@@ -17,12 +17,12 @@
 
 
 ----
-
+<!--
 ### Blog post : 
 Check out the detailed description [here](https://medium.com/@saima.s.chaity/build-a-todo-application-using-python-and-django-458d5ca7ffef)
 
 [GitHub Repository](https://github.com/Saima-Chaity/ToDo_Application/)
-
+-->
 ### Features :
 
 - Add todo item in specific category
