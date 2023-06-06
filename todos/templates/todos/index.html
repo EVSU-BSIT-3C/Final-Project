@@ -83,7 +83,8 @@
                       todoElement.textContent = remainingTime;
 
                       // Check if the remaining time is within the last 5 minutes (300 seconds)
-                      if (time.total <= 300) {
+                      // changed from 300s to 30s
+                      if (time.total <= 30) {
                           toggleBlinkingHeader(true); // Enable blinking
                       } else {
                           toggleBlinkingHeader(false); // Disable blinking
